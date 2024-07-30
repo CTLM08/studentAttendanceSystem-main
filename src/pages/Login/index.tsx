@@ -12,7 +12,7 @@ const Login = () => {
       />
       <button
         onClick={() => signInWithGoogle()}
-        className="rounded-md h-16 w-1/5 text-zinc-800 hover:mt-10   bg-slate-300 flex justify-center items-center gap-3 font-semibold transition-all hover:bg-slate-300/80 hover:gap-4 hover:text-lg "
+        className="rounded-md h-16 w-1/5 mt-8 text-zinc-800 hover:mt-10   bg-slate-300 flex justify-center items-center gap-3 font-semibold transition-all hover:bg-slate-300/80 hover:gap-4 hover:text-lg "
       >
         <Icon icon="logos:google-icon" className="w-6 h-6" /> 谷歌登入
       </button>

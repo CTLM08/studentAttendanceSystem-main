@@ -1,13 +1,11 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import React, { useContext, useState } from "react";
 import AppContext from "../../../AppContext";
-import { settleAbsences } from "./StudentListItem";
 
-type Props = {};
-
-const StudentsHeader = (props: Props) => {
-  const { type, setType, settleAbsences, totalAbsences } =
+const StudentsHeader = () => {
+  const { type, setType, totalAbsences, settleAbsences } =
     useContext(AppContext);
+
   return (
     <div>
       <div className="flex justify-end gap-2 items-center">
@@ -46,7 +44,6 @@ const StudentsHeader = (props: Props) => {
           <button
             onClick={() => {
               settleAbsences();
-              console.log(totalAbsences);
             }}
             className="w-full flex justify-center items-center bg-blue-500 text-zinc-900 font-semibold p-2 h-full rounded-md"
           >

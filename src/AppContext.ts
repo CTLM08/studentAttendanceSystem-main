@@ -1,11 +1,11 @@
 import { createContext } from "react";
 
- const AppContext = createContext<{
-  userData: any,
-    setType: (type: string) => void;
-    type: string;
-    settleAbsences: () => void;
-    totalAbsences: any;
+const AppContext = createContext<{
+  userData: any;
+  setType: (type: string) => void;
+  type: string;
+  settleAbsences: () => void;
+  totalAbsences: any;
 }>({
   userData: null,
   setType: () => {},
