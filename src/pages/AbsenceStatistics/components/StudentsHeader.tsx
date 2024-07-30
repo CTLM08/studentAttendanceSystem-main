@@ -1,32 +1,57 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
-import React from "react";
+import React, { useContext, useState } from "react";
+import AppContext from "../../../AppContext";
+import { settleAbsences } from "./StudentListItem";
 
 type Props = {};
 
 const StudentsHeader = (props: Props) => {
+  const { type, setType, settleAbsences, totalAbsences } =
+    useContext(AppContext);
   return (
     <div>
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-2 items-center">
         <div className="dropdown dropdown-bottom w-[20%]">
           <div
             tabIndex={0}
             role="button"
-            className="btn m-1 flex flex-row text-white "
+            className="btn m-1 flex flex-row text-white rounded-md"
           >
-            年段{" "}
+            {type}
             <Icon icon="gridicons:dropdown" className="text-white w-5 h-5" />
           </div>
           <ul
             tabIndex={0}
-            className="dropdown-content menu bg-base-100 rounded-box z-[1] w-ful p-2 shadow font-semibold"
+            className="dropdown-content menu bg-base-100 rounded-md z-[1] w-full flex justify-center items-center p-2 shadow font-semibold"
           >
-            <li>
-              <a>高中</a>
+            <li className="w-full">
+              <a
+                className="w-full  flex justify-center items-center"
+                onClick={() => setType("高中")}
+              >
+                高中
+              </a>
             </li>
-            <li>
-              <a>初中</a>
+            <li className="w-full  ">
+              <a
+                className="w-full flex justify-center items-center"
+                onClick={() => setType("初中")}
+              >
+                初中
+              </a>
             </li>
           </ul>
+        </div>
+        <div className="w-[20%]">
+          <button
+            onClick={() => {
+              settleAbsences();
+              console.log(totalAbsences);
+            }}
+            className="w-full flex justify-center items-center bg-blue-500 text-zinc-900 font-semibold p-2 h-full rounded-md"
+          >
+            直接结算
+          </button>
         </div>
       </div>
       <div className="flex border-b-2 font-medium border-zinc-700 p-4">

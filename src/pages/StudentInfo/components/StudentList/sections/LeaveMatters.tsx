@@ -7,8 +7,9 @@ import {
   where,
 } from "firebase/firestore";
 import React, { useRef, useState } from "react";
-import { firestore } from "../../../firebase.config";
-const Leave_matters: React.FC<{
+import { firestore } from "../../../../../firebase.config";
+
+const LeaveMatters: React.FC<{
   students: any;
 }> = ({ students }) => {
   const dateInputRef = useRef<HTMLInputElement>(null);
@@ -126,4 +127,4 @@ const Leave_matters: React.FC<{
   );
 };
 
-export default Leave_matters;
+export default LeaveMatters;

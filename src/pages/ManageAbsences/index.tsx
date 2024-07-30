@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from "react";
 import StudentList from "./components/StudentList";
 import { StudentData } from "./types";
-import StudentListHeader from "./components/StudentList/StudentListHeader";
+import StudentListHeader from "./components/StudentList/components/StudentListHeader";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { collection } from "firebase/firestore";

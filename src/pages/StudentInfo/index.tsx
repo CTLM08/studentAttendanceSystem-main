@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import StudentListHeader from "../ManageAbsences/components/StudentList/StudentListHeader";
+import StudentListHeader from "../ManageAbsences/components/StudentList/components/StudentListHeader";
 import { StudentData } from "../ManageAbsences/types";
-import StudentList from "./component";
+import StudentList from "./components/StudentList";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { collection } from "firebase/firestore";
 import { firestore } from "../../firebase.config";

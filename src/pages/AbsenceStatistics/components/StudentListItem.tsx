@@ -1,35 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { StudentData } from "../../ManageAbsences/types";
+import { useCollection } from "react-firebase-hooks/firestore";
+import { collection } from "firebase/firestore";
+import { firestore } from "../../../firebase.config";
 
-type Props = {};
-
-const StudentListItem: React.FC<StudentData> = ({
-  id,
-  name_ch: name,
-  name_en: enName,
-  class: className,
-  seat_no: seatNumber,
-  status,
-  statusColor,
-  hasSettled,
-}) => {
+const StudentListItem: React.FC<{
+  student: StudentData;
+}> = ({ student }) => {
+  const [value, loading] = useCollection(
+    collection(firestore, "attendance_raw_record")
+  );
+  const [absences, setAbsences] = useState<boolean>(false);
+  useEffect(() => {
+    if (!loading) {
+      value?.docs.forEach((doc) => {
+        if (doc.data().studentId === student.id) {
+          setAbsences(true);
+        }
+      });
+    }
+  }, [loading]);
   return (
     <div>
       {" "}
       <button className="flex w-full justify-between text-left p-4">
-        <div className="w-2/12">{id}</div>
+        <div className="w-2/12">{student.id}</div>
         <div className="w-5/12">
-          {name} {enName}
+          {student.name_ch} {student.name_en}
         </div>
-        <div className="w-1/12 text-center">{className}</div>
-        <div className="w-2/12 text-center">{seatNumber}</div>
+        <div className="w-1/12 text-center">{student.class}</div>
+        <div className="w-2/12 text-center">{student.seat_no}</div>
         <div className="flex items-center gap-1.5 w-2/12">
-          <div className={`shrink-0 size-2 ${statusColor} rounded-full`} />
-          <div>
-            {STATUS[status as keyof typeof STATUS]}
-            {status === "absent" && !hasSettled && (
-              <span className="text-red-600"> (未处理)</span>
-            )}
-          </div>
+          <div
+            className={`shrink-0 size-2  rounded-full ${
+              absences == true ? "bg-green-500" : "bg-red-500"
+            }`}
+          />
+          <div>{absences == true ? "出席" : "缺席"}</div>
         </div>
       </button>
     </div>
