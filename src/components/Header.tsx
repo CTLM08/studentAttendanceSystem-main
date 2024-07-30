@@ -31,11 +31,6 @@ const NAMES = [
     en: "Attendance Statistics",
     description: "View the statistics of the attendance status",
   },
-  {
-    zh: "登入",
-    en: "Login",
-    description: "Login to the system",
-  },
 ];
 
 const Header: React.FC = () => {

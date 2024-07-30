@@ -32,13 +32,13 @@ const LeaveMatters: React.FC<{
       setLoading(!loading);
     }
     setLoading(true);
-    let Data = collection(firestore, "attendance");
-    let q = query(
+    const Data = collection(firestore, "attendance");
+    const q = query(
       Data,
       where("id", "==", students.id),
       where("date", "==", dateChoose)
     );
-    let querySnapshot = await getDocs(q);
+    const querySnapshot = await getDocs(q);
     if (querySnapshot.empty) {
       alert("提交失败");
       setLoading(!loading);
@@ -101,10 +101,19 @@ const LeaveMatters: React.FC<{
             >
               <a className="w-full flex justify-center items-center">病假</a>
             </li>
-            <li className="flex justify-center items-center w-full">
+            <li
+              className="flex justify-center items-center w-full"
+              onClick={() => setTypeOfLeave("特别病假")}
+            >
               <a className="w-full flex justify-center items-center">
                 特别病假
               </a>
+            </li>
+            <li
+              className="flex justify-center items-center w-full"
+              onClick={() => setTypeOfLeave("旷课")}
+            >
+              <a className="w-full flex justify-center items-center">旷课</a>
             </li>
           </ul>
         </div>
