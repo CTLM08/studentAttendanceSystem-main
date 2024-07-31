@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 const Summary = () => {
@@ -8,7 +7,9 @@ const Summary = () => {
         <div className="flex flex-row justify-between w-full flex-1">
           <p className="text-zinc-900 font-bold text-xl">缺席人数</p>
           <Link to="/attendance-statistics">
-            <p className="text-zinc-700 font-semibold">更多</p>
+            <p className="text-zinc-700 font-semibold hover:text-zinc-800 hover:text-lg transition-all">
+              更多
+            </p>
           </Link>
         </div>
         <div className="h-full flex justify-center items-center ">

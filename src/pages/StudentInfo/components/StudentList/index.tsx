@@ -7,14 +7,31 @@ import StudentListItem from "./components/StudentListItem";
 
 interface StudentListProps {
   students: StudentData[];
+  statuses: Record<string, { type: string; reason: string }>;
 }
 
-const StudentList: React.FC<StudentListProps> = ({ students }) => {
+const StudentList: React.FC<StudentListProps> = ({ students, statuses }) => {
   return (
     <div className="h-max overflow-auto">
       <div className="space-y-2 mt-4 mb-12 h-max overflow-auto">
         {students.map((student, index) => (
-          <StudentListItem key={index} {...student} />
+          <StudentListItem
+            key={index}
+            {...student}
+            statusColor={
+              statuses[student.id]
+                ? {
+                    特假: "bg-purple-500",
+                    事假: "bg-white",
+                    丧假: "bg-gray-500",
+                    病假: "bg-blue-500",
+                    特别病假: "bg-indigo-500",
+                    旷课: "bg-orange-500",
+                  }[statuses[student.id].type] || "bg-red-500"
+                : "bg-green-500"
+            }
+            status={statuses[student.id]?.type || "出席"}
+          />
         ))}
       </div>
     </div>

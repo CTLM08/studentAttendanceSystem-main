@@ -12,6 +12,7 @@ export const useAuth = () => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (_user) => {
+      console.log(_user);
       if (_user) {
         const staffData = collection(firestore, "staff");
         const q = query(staffData, where("email", "==", _user.email));

@@ -17,6 +17,7 @@ import {
   where,
 } from "firebase/firestore";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import moment from "moment";
 
 function App() {
   const location = useLocation();
@@ -27,6 +28,7 @@ function App() {
   );
   const [rawAttendance, setRawAttendance] = useState<any>([]);
   const [totalAbsences, setTotalAbsences] = useState<any>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (location.pathname === "/") {
@@ -37,8 +39,10 @@ function App() {
   async function fetchRawAbsences() {
     const q = query(
       collection(firestore, "attendance_raw_record"),
-      where("date", "==", new Date().toLocaleDateString())
+      where("date", "==", moment().format("DD/MM/YYYY"))
     );
+
+    console.log(new Date().toLocaleDateString());
 
     const result = await getDocs(q);
 
@@ -55,6 +59,7 @@ function App() {
 
   async function settleAbsences() {
     if (!allStudentsLoading && allStudents && rawAttendance) {
+      setLoading(true);
       const allAbsentees = allStudents.docs.filter(
         (doc) =>
           rawAttendance.filter((absence) => absence.studentId === doc.id)
@@ -65,22 +70,31 @@ function App() {
         await addDoc(collection(firestore, "attendance"), {
           id: absentee.id,
           approved: false,
-          date: new Date().toLocaleDateString(),
+          date: moment().format("DD/MM/YYYY"),
           period: Array(10)
             .fill(0)
             .map((_, i) => i + 1),
-          type: "旷课",
+          type: "缺席（未处理）",
           reason: "",
         });
       }
 
+      setLoading(false);
       alert("已处理所有缺席学生");
     }
   }
 
   return (
     <AppContext.Provider
-      value={{ userData, type, setType, settleAbsences, totalAbsences }}
+      value={{
+        userData,
+        type,
+        setType,
+        settleAbsences,
+        totalAbsences,
+        loading,
+        setLoading,
+      }}
     >
       <main className="flex bg-zinc-900 h-screen text-zinc-100">
         {ready ? (

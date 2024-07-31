@@ -8,10 +8,12 @@ import {
 } from "firebase/firestore";
 import React, { useRef, useState } from "react";
 import { firestore } from "../../../../../firebase.config";
+import moment from "moment";
 
 const LeaveMatters: React.FC<{
   students: any;
-}> = ({ students }) => {
+  setExpanded: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ students, setExpanded }) => {
   const dateInputRef = useRef<HTMLInputElement>(null);
   const [TypeOfLeave, setTypeOfLeave] = useState<string>("");
   const [dateChoose, setDate] = useState<string>("");
@@ -36,20 +38,26 @@ const LeaveMatters: React.FC<{
     const q = query(
       Data,
       where("id", "==", students.id),
-      where("date", "==", dateChoose)
+      where("date", "==", moment(dateChoose).format("DD/MM/YYYY"))
     );
     const querySnapshot = await getDocs(q);
     if (querySnapshot.empty) {
       alert("提交失败");
-      setLoading(!loading);
+      setLoading(false);
     } else {
       updateDoc(querySnapshot.docs[0].ref, {
         approved: true,
-        date: dateChoose,
+        date: moment(dateChoose).format("DD/MM/YYYY"),
         type: TypeOfLeave,
         reason: reason,
+      }).then(() => {
+        setLoading(false);
+        setExpanded(false);
+        alert("提交成功");
+        setTypeOfLeave("");
+        setDate("");
+        setReason("");
       });
-      setLoading(!loading);
     }
   }
   return (
@@ -57,10 +65,14 @@ const LeaveMatters: React.FC<{
       <h1 className="text-xl font-semibold flex flex-row justify-between">
         <p>请假事宜</p>
         <button
-          className="bg-blue-500/60 w-[30%] h-11 rounded-md text-base  "
+          className="bg-blue-500/60 w-[30%] h-11 rounded-md text-base flex justify-center items-center "
           onClick={() => submit()}
         >
-          {loading ? "提交中" : "提交"}
+          {loading ? (
+            <Icon icon="line-md:loading-loop" className="text-white w-5 h-5" />
+          ) : (
+            "提交"
+          )}
         </button>
       </h1>
       <div className="flex flex-row gap-3 mt-3">

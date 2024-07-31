@@ -11,13 +11,19 @@ import {
 import "firebase/compat/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBwYza4_4rqH_Xr0RrCtUwOnKqDAONCThU",
-  authDomain: "educational-system-6d6a0.firebaseapp.com",
-  projectId: "educational-system-6d6a0",
-  storageBucket: "educational-system-6d6a0.appspot.com",
-  messagingSenderId: "4807114175",
-  appId: "1:4807114175:web:8342bba579041f2cc4f50a",
-  measurementId: "G-GXG231BYQK",
+
+  apiKey: "AIzaSyDir-zvhrzJZgWElnUfjFTzL4Zo0zuH_pk",
+
+  authDomain: "edu-system2.firebaseapp.com",
+
+  projectId: "edu-system2",
+
+  storageBucket: "edu-system2.appspot.com",
+
+  messagingSenderId: "855741339000",
+
+  appId: "1:855741339000:web:132230c985fa0b848c648d"
+
 };
 
 export const app = firebase.initializeApp(firebaseConfig);
@@ -38,6 +44,7 @@ export const signInWithGoogle = () => {
     let querySnapshot = await getDocs(q);
     if (!querySnapshot.empty && user?.uid) {
       if (additionalUserInfo?.isNewUser) {
+        console.log("sus")
         updateDoc(doc(firestore, "staff", querySnapshot.docs[0].id), {
           photoUrl: user.photoURL,
           accUid: user.uid,

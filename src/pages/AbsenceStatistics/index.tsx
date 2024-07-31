@@ -6,6 +6,7 @@ import { firestore } from "../../firebase.config";
 import StudentListItem from "./components/StudentListItem";
 import { useContext, useEffect, useState } from "react";
 import AppContext from "../../AppContext";
+import moment from "moment";
 
 const AbsencesStatistics = () => {
   const [value, loading] = useCollection(collection(firestore, "students"));
@@ -23,7 +24,7 @@ const AbsencesStatistics = () => {
   useEffect(() => {
     const q = query(
       collection(firestore, "attendance"),
-      where("date", "==", new Date().toLocaleDateString())
+      where("date", "==", moment().format("DD/MM/YYYY"))
     );
     const fetchAbsences = async () => {
       const result = await getDocs(q);
@@ -35,7 +36,7 @@ const AbsencesStatistics = () => {
   }, []);
 
   return (
-    <div>
+    <div className="overflow-auto">
       <StudentsHeader />
       <>
         {loading || !value || !absences ? (
@@ -46,7 +47,7 @@ const AbsencesStatistics = () => {
               {doc.data().class[0] === seniorOrJunior && (
                 <StudentListItem
                   student={doc.data()}
-                  absences={absences.some((absence) => absence.id == doc.id)}
+                  absences={!absences.some((absence) => absence.id == doc.id)}
                 />
               )}
             </>

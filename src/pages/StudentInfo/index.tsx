@@ -4,31 +4,90 @@ import StudentListHeader from "../ManageAbsences/components/StudentList/componen
 import { StudentData } from "../ManageAbsences/types";
 import StudentList from "./components/StudentList";
 import { useCollection } from "react-firebase-hooks/firestore";
-import { collection } from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { firestore } from "../../firebase.config";
 import AppContext from "../../AppContext";
+import moment from "moment";
 
 const StudentInfo = () => {
   const [search, setSearch] = useState("");
-  const [value, loading] = useCollection(collection(firestore, "students"));
-  const [filteredData, setFilteredData] = useState<StudentData[]>();
   const { userData } = useContext(AppContext);
+  const [allData, setAllData] = useState<StudentData[] | null>(null);
+  const [filteredData, setFilteredData] = useState<StudentData[]>();
+  const [statuses, setStatuses] = useState<
+    Record<string, { type: string; reason: string }>
+  >(Object.create(null));
 
   useEffect(() => {
-    if (!loading) {
+    if (userData?.class) {
+      const q = query(
+        collection(firestore, "students"),
+        where("class", "==", userData.class)
+      );
+
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const data = querySnapshot.docs.map((doc) => doc.data() as StudentData);
+        setAllData(data);
+      });
+
+      return unsubscribe;
+    } else {
+      const unsubscribe = onSnapshot(
+        collection(firestore, "students"),
+        (querySnapshot) => {
+          const data = querySnapshot.docs.map(
+            (doc) => doc.data() as StudentData
+          );
+          setAllData(data);
+        }
+      );
+
+      return unsubscribe;
+    }
+  }, [userData?.class]);
+
+  useEffect(() => {
+    if (allData) {
       setFilteredData(
-        value!.docs
-          .map((doc) => doc.data() as StudentData)
-          .filter(
-            (student) =>
-              (student.class == userData?.class &&
-                student.name_ch.toLowerCase().includes(search.toLowerCase())) ||
-              student.name_en.toLowerCase().includes(search.toLowerCase()) ||
-              student.class.toLowerCase().includes(search.toLowerCase())
-          )
+        allData.filter(
+          (e) =>
+            e.name_ch.toLowerCase().includes(search.toLowerCase()) ||
+            e.name_en.toLowerCase().includes(search.toLowerCase())
+        )
       );
     }
-  }, [search, loading]);
+  }, [search, allData]);
+
+  useEffect(() => {
+    if (allData) {
+      const IDs = allData.map((e) => e.id);
+
+      const q = query(
+        collection(firestore, "attendance"),
+        where("date", "==", moment().format("DD/MM/YYYY"))
+      );
+
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const data = querySnapshot.docs
+          .map((doc) => doc.data())
+          .filter((e: any) => IDs.includes(e.id));
+
+        const statuses = Object.fromEntries(
+          data.map((e: any) => [
+            e.id,
+            {
+              type: e.type,
+              reason: e.reason,
+            },
+          ])
+        );
+
+        setStatuses(statuses);
+      });
+
+      return unsubscribe;
+    }
+  }, [allData]);
 
   return (
     <>
@@ -48,14 +107,12 @@ const StudentInfo = () => {
       </div>
       <StudentListHeader />
       <>
-        {loading || !value ? (
-          <div>Loading...</div>
-        ) : filteredData ? (
-          <StudentList
-            students={filteredData.filter((e) => e.class == userData?.class)}
-          />
+        {filteredData ? (
+          <StudentList students={filteredData} statuses={statuses} />
         ) : (
-          <StudentList students={value?.docs.map((doc) => doc.data) as any} />
+          <div className="flex justify-center items-center h-96">
+            <p className="text-xl text-slate-300">没有学生信息</p>
+          </div>
         )}
       </>
     </>

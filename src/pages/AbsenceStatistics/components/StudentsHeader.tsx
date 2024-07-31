@@ -3,7 +3,7 @@ import React, { useContext, useState } from "react";
 import AppContext from "../../../AppContext";
 
 const StudentsHeader = () => {
-  const { type, setType, totalAbsences, settleAbsences } =
+  const { type, setType, totalAbsences, settleAbsences, loading } =
     useContext(AppContext);
 
   return (
@@ -47,7 +47,14 @@ const StudentsHeader = () => {
             }}
             className="w-full flex justify-center items-center bg-blue-500 text-zinc-900 font-semibold p-2 h-full rounded-md"
           >
-            直接结算
+            {loading ? (
+              <Icon
+                icon="svg-spinners:180-ring"
+                className="text-zinc-800 w-5 h-5"
+              />
+            ) : (
+              "直接结算"
+            )}
           </button>
         </div>
       </div>

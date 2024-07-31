@@ -7,12 +7,6 @@ import Information from "../sections/Information";
 import Cleanliness from "../sections/Cleanliness";
 import LeaveMatters from "../sections/LeaveMatters";
 
-const STATUS = {
-  official: "公假",
-  absent: "缺席",
-  present: "出席",
-};
-
 const StudentListItem: React.FC<StudentData> = ({
   id,
   name_ch: name,
@@ -40,7 +34,7 @@ const StudentListItem: React.FC<StudentData> = ({
         <div className="flex items-center gap-1.5 w-2/12">
           <div className={`shrink-0 size-2 ${statusColor} rounded-full`} />
           <div>
-            {STATUS[status as keyof typeof STATUS]}
+            {status}
             {status === "absent" && !hasSettled && (
               <span className="text-red-600"> (未处理)</span>
             )}
@@ -99,7 +93,7 @@ const StudentListItem: React.FC<StudentData> = ({
           ) : expandedButton === "卫生检查" ? (
             <Cleanliness />
           ) : expandedButton === "请假事宜" ? (
-            <LeaveMatters students={{ id }} />
+            <LeaveMatters setExpanded={setExpanded} students={{ id }} />
           ) : null}
         </div>
       </div>
